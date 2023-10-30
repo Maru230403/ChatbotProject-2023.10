@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, flash, session
-from bp.map import map_bp
 from bp.user import user_bp
 from bp.schedule import schdedule_bp
 import os, random
