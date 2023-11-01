@@ -1,38 +1,32 @@
 {% extends "base.html" %}
 
-
-
 {% block additional_body %}
-    <img src="{{url_for('static', filename='img/home.jpg')}}" width="100%" style= margin-top:80px;>
+    <img src="{{ url_for('static', filename='img/home.jpg') }}" width="100%" style="margin-top: 80px;">
     <div class="mt-0 ml-0 p-2 bg-white text-black rounded">
-                <h1>서울 사회초년생들을 위한 부동산 챗봇 "OLIM" 입니다.</h1>
-                <h2>OLIM 빠르게 알아보기</h2><br>
-                    올림이 : 당신의 궁금증을 해결해줄 수 있는 채팅 로봇<br><br>
+        <h1 class="text-center">서울 사회초년생들을 위한 부동산 챗봇 "OLIM" 입니다.</h1>
+        <h3 class="text-center">OLIM 빠르게 알아보기</h3><br>
+        <p class="text-center">올림이: 당신의 궁금증을 해결해줄 수 있는 채팅 로봇</p>
+        <p class="text-center">기초사전: 부동산 초보를 위한 필수 지식</p>
+        <p class="text-center">사기유형: 눈뜨고 코베이지 않을려면 필독</p>
+        <p class="text-center">공인중개사MAP: 원하는 동네의 부동산은 여기서 검색</p>
 
-                    기초사전: 부동산 초보를 위한 필수 지식<br><br>
-
-                    사기유형: 눈뜨고 코베이지 않을려면 필독<br><br>
-
-                    공인중개사MAP: 원하는 동네의 부동산은 여기서 검색<br><br>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-6 offset-md-6">
-                                <div class="card" style="width: 300px;">
-                                    <div class="card-body">
-                                        <h4 class="card-title">TEAM OLIM</h4>
-                                        <p class="card-text">
-                                            조장: 심민준<br>
-                                            팀원: 탁광호<br>
-                                            팀원: 조세훈<br>
-                                            팀원: 윤금성
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 offset-md-6">
+                    <div class="card mt-0" style="width: 200px; position: absolute; bottom: 130px; right: 0;">
+                        <div class="card-body">
+                            <h4 class="card-title">TEAM OLIM</h4>
+                            <p class="card-text">
+                                조장: 심민준<br>
+                                팀원: 탁광호<br>
+                                팀원: 송재훈<br>
+                                팀원: 조세훈<br>
+                                팀원: 윤금성
+                            </p>
                         </div>
                     </div>
-    </div>
-    
+                </div>
+            </div>
+        </div>
+    </div> 
 {% endblock %}
-
-    
