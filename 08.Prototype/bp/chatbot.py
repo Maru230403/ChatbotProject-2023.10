@@ -6,7 +6,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 chatbot_bp = Blueprint('chatbot_bp', __name__)
 
-menu = {'ho':0, 'us':0, 'cr':0, 'ma':0, 'cb':1, 'sc':0}
+menu = {'ho':0, 'ol':1, 'ba':0, 'fr':0, 'mp':0 }
 
 
 

@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block subtitle %}부동산{% endblock%}
+{% block content %}
+    <iframe src="{{url_for('static', filename='img/dong.html')}}" frameborder="1"
+        width="800" height="500"></iframe>
+    <button onclick="location.href='/map/realestate'">재검색</button>
+{% endblock %}

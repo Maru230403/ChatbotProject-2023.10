@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from urllib.parse import quote
 
-def get_station_map(root_path, stations):
+def get_realestate_map(root_path, realestates):
 
     # CSV 파일에서 데이터 읽기
     data = pd.read_csv('data/서울부동산.csv')  # CSV 파일 이름을 적절하게 변경하세요
@@ -26,5 +26,5 @@ def get_station_map(root_path, stations):
             tooltip=data.CMP_NM[i],
             popup=folium.Popup(data.ADDRESS[i], max_width=200)
         ).add_to(map)   
-    filename = os.path.join(root_path, 'img/map.html')
+    filename = os.path.join(root_path, 'img/dong.html')
     map.save(filename)

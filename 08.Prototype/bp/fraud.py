@@ -1,10 +1,10 @@
 from flask import Blueprint, render_template, current_app, request
-import util.crawl_util as cu
+
 
 
 fraud_bp = Blueprint('fraud_bp', __name__)
 
-menu = {'ho':0, 'us':0, 'cr':1, 'ma':0,'cb':0,  'sc':0}
+menu = {'ho':0, 'ol':0, 'ba':0, 'fr':1, 'mp':0 }
 
 @fraud_bp.route('/camouflagedProperty')
 def camouflagedProperty():

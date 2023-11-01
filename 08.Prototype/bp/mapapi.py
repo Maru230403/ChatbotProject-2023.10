@@ -5,6 +5,8 @@ import os
 
 mapapi_bp = Blueprint('mapapi_bp', __name__)
 
+menu = {'ho':0, 'ol':0, 'ba':0, 'fr':0, 'mp':1 }
+
 def get_dataframe():
     filename = os.path.join(current_app.static_folder, 'data', '서울부동산.csv')
     return pd.read_csv(filename)
@@ -17,7 +19,7 @@ def map_by_dong(df, dong):
         popup_html = f"""
             <div class="popup-content-wrapper" style="white-space: nowrap;">
                 <div class="popup-content" style="cursor: pointer;" onclick="showDetails('{gf.CMP_NM[i]}', '{gf.ADDRESS[i]}', '{gf.RA_REGNO[i]}')">
-                    {gf.ADDRESS[i]}
+                    {gf.CMP_NM[i]}<br>{gf.ADDRESS[i]}<br>{gf.RA_REGNO[i]}
                 </div>
             </div>
         """
@@ -27,7 +29,7 @@ def map_by_dong(df, dong):
 @mapapi_bp.route('/mapapi', methods=['GET', 'POST'])
 def mapapi():
     if request.method == 'GET':
-        return render_template('mapapi/mapapi.html', menu={'ho': 0, 'us': 0, 'cr': 1, 'ma': 0, 'cb': 0, 'sc': 0})
+        return render_template('mapapi/mapapi.html', menu=menu)
     else:
         df = get_dataframe()
         dong = request.form.get('dong')
