@@ -20,30 +20,16 @@
         document.getElementById("userInput").value = "";
     }
 
+            
     function send() {
         let userInput = document.getElementById("userInput").value;
         requestChatbot('POST', userInput);
-
-        // 로딩 이미지와 스피너를 포함할 컨테이너 생성 및 추가
-        var loadingContainer = $('<div></div>')
-            .css({position: 'relative'})
+        $('<img></img>')
+            .attr({'class': 'mt-3', src: "{{url_for('static', filename='img/loading1.gif')}}", id: 'waitImg'})
             .appendTo('#container');
-
-        // 이미지 엘리먼트 생성 및 컨테이너에 추가
-        $('<img>')
-            .attr({"class": "mt-3", src: "{{url_for('static', filename='img/loading1.gif')}}", id: 'waitImg'})
-            .css({position: 'absolute'})
-            .appendTo(loadingContainer);
-
-        // 스피너 엘리먼트 생성 및 컨테이너에 추가
-        $('<div></div>')
-            .addClass('spinner-border text-light')
-            .css({position: 'absolute', top: '30px', left: '230px'})
-            .appendTo(loadingContainer);
             sendMessage()
     }
     function requestChatbot(type, userInput) {
-            
             
             let url, data;
             if (type === 'GET') {
@@ -62,8 +48,7 @@
                 url: url,
                 data: data,
                 success: function(result) {
-                    // 서버로부터 응답 받았을 때 로딩 이미지와 스피너를 제거
-                    $('#waitImg').parent().remove();
+                    $('#waitImg').remove();
                     let obj = JSON.parse(result);
                     let mark = 'mark' + Math.floor(Math.random() * 100000);
                     
@@ -90,6 +75,7 @@
                             .attr({src: "{{url_for('static', filename='img/person.png')}}", height: '32'}).appendTo('#'+mark+'3');
                         $('<span></span>')
                             .text(' '+ obj.user).appendTo('#'+mark+'3');
+                        //$('<hr></hr>').appendTo('#container'); // 유저 메시지 아래에 수평선 추가
                         
                         // 봇 메시지 생성
                         $('<div></div>')
@@ -102,7 +88,7 @@
                         $('<img></img>')
                             .attr({src: "{{url_for('static', filename='img/ai.png')}}", height: '32'}).appendTo('#'+mark+'8');                   
                         
-                        if (obj.final_score >= 0.54) {
+                        if (obj.final_score >= 0.65) {
                             $('<span></span>')
                             .text(' '+obj.chatbot).appendTo('#'+mark+'8');
                             scrollToBottom()
@@ -117,8 +103,8 @@
                             .text('최종 점수: ' + (parseFloat(obj.final_score) * 100).toFixed(1) + '%')
                             .appendTo('#'+mark+'7');
 
+                        //$('<hr></hr>').appendTo('#container'); // 봇 메시지 아래에 수평선 추가
                     }
-
                     // ... 나머지 로직 ...
 
                     // response 처리를 위한 로직, 
@@ -131,15 +117,16 @@
         // GET 요청
         requestChatbot('GET');
 
-</script>
+    </script>
 {% endblock %}
 {% block content %}
         
+
                     <div class="row">
-                        <div class="col-md-12 mx-auto" >
+                        <div class="col-md-12 mx-auto">
                             <div class="outer-container overflow-auto" id="container" style="height: 600px; margin-top: 1px;">
-                                <!-- 초기 환영 메시지는 이 부분에 직접 추가 -->
-                                <div class="d-flex flex-row mt-3">
+                                <!-- 초기 환영 메시지 또는 원하는 내용 추가 -->
+                                <div class="d-flex flex-row mt-1">
                                     <div class="card bg-success text-white w-100">
                                         <div class="card-body">
                                             <img src="{{url_for('static', filename='img/ai.png')}}" height="32">
@@ -150,8 +137,8 @@
                             </div>
                         </div>
                     </div>
- 
-
+                    
+        
         <div class="row" style="margin-top: 20px;">
             <div class="col-md-12 mx-auto" >
                 <div class="input-group mb-3" style="height: 50px;">
