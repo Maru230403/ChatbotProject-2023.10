@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+{% block title %}부동산 사회초년생을 위한 챗봇{% endblock %}
+{% block addtional_head %}
+<script>
+    // 스크롤을 아래로 자동으로 내리는 함수
+    function scrollToBottom() {
+        var container = document.getElementById("container");
+            container.scrollTop = container.scrollHeight - container.clientHeight;
+        }
+
+        // 사용자 입력을 처리하고 메시지를 추가한 후 스크롤을 아래로 내리는 함수
+        function sendMessage() {
+        var userInput = document.getElementById("userInput").value;
+        // 사용자 입력 처리 및 메시지 추가 로직 추가
+
+        // 스크롤을 아래로 자동으로 내림
+        scrollToBottom();
+
+        // 입력란 비우기
+        document.getElementById("userInput").value = "";
+    }
+
+    function send() {
+        let userInput = document.getElementById("userInput").value;
+        requestChatbot('POST', userInput);
+
+        // 로딩 이미지와 스피너를 포함할 컨테이너 생성 및 추가
+        var loadingContainer = $('<div></div>')
+            .css({position: 'relative'})
+            .appendTo('#container');
+
+        // 이미지 엘리먼트 생성 및 컨테이너에 추가
+        $('<img>')
+            .attr({"class": "mt-3", src: "{{url_for('static', filename='img/loading1.gif')}}", id: 'waitImg'})
+            .css({position: 'absolute'})
+            .appendTo(loadingContainer);
+
+        // 스피너 엘리먼트 생성 및 컨테이너에 추가
+        $('<div></div>')
+            .addClass('spinner-border text-light')
+            .css({position: 'absolute', top: '30px', left: '230px'})
+            .appendTo(loadingContainer);
+            sendMessage()
+    }
+    function requestChatbot(type, userInput) {
+            
+            
+            let url, data;
+            if (type === 'GET') {
+                url = '/chatbot/get_welcome_message';
+                data = {};
+            } else if (type === 'POST') {
+                url = '/chatbot/counsel';
+                data = { userInput: userInput };
+            } else {
+                console.error("Invalid request type");
+                return;
+            }
+            
+            $.ajax({
+                type: type,
+                url: url,
+                data: data,
+                success: function(result) {
+                    // 서버로부터 응답 받았을 때 로딩 이미지와 스피너를 제거
+                    $('#waitImg').parent().remove();
+                    let obj = JSON.parse(result);
+                    let mark = 'mark' + Math.floor(Math.random() * 100000);
+                    
+                    // 입력란의 DOM 요소를 가져와서 userInput 변수에 저장
+                    var userInput = document.getElementById("userInput");
+
+                    // 사용자가 입력한 텍스트를 userText 변수에 저장
+                    var userText = userInput.value;
+
+                    // 입력란을 비우고 투명도를 조정하여 초기 상태로 되돌림
+                    userInput.value = "";
+                    userInput.style.opacity = 0.7;
+                    
+                    if (type === 'POST') {
+                        // 유저 메시지 생성 (왼쪽 정렬)
+                        $('<div></div>')
+                            .attr({'class': 'd-flex flex-row mt-3', id: mark+'1'})
+                            .appendTo('#container');
+                        $('<div></div>')
+                            .attr({'class': 'card bg-light text-dark bold-text w-100', id: mark+'2'}).appendTo('#'+mark+'1');
+                        $('<div></div>')
+                            .attr({'class': 'card-body', id: mark+'3'}).appendTo('#'+mark+'2'); // text-end 클래스를 제거
+                        $('<img></img>')
+                            .attr({src: "{{url_for('static', filename='img/person.png')}}", height: '32'}).appendTo('#'+mark+'3');
+                        $('<span></span>')
+                            .text(' '+ obj.user).appendTo('#'+mark+'3');
+                        
+                        // 봇 메시지 생성
+                        $('<div></div>')
+                            .attr({'class': 'd-flex flex-row mt-3', id: mark+'6'})
+                            .appendTo('#container');
+                        $('<div></div>')
+                            .attr({'class': 'card bg-success text-white w-100', id: mark+'7'}).appendTo('#'+mark+'6');
+                        $('<div></div>')
+                            .attr({'class': 'card-body', id: mark+'8'}).appendTo('#'+mark+'7');
+                        $('<img></img>')
+                            .attr({src: "{{url_for('static', filename='img/ai.png')}}", height: '32'}).appendTo('#'+mark+'8');                   
+                        
+                        if (obj.final_score >= 0.54) {
+                            $('<span></span>')
+                            .text(' '+obj.chatbot).appendTo('#'+mark+'8');
+                            scrollToBottom()
+                        }
+                        else {
+                            $('<span></span>')
+                            .text('죄송합니다. 질문을 이해하지 못하였습니다.').appendTo('#'+mark+'8');
+                            scrollToBottom()
+                        }
+                        $('<div></div>') //최종점수 보는 것이므로 나중에 삭제코드 
+                            .attr({'class': 'text-end mt-1 text-light', style: 'font-size: small;'})
+                            .text('최종 점수: ' + (parseFloat(obj.final_score) * 100).toFixed(1) + '%')
+                            .appendTo('#'+mark+'7');
+
+                    }
+
+                    // ... 나머지 로직 ...
+
+                    // response 처리를 위한 로직, 
+                    // 예: obj.message나 obj.user, obj.chatbot 값에 따라서 분기 처리 등
+                }
+            });
+        }
+
+        // 사용 예:
+        // GET 요청
+        requestChatbot('GET');
+
+</script>
+{% endblock %}
+{% block content %}
+        
+                    <div class="row">
+                        <div class="col-md-12 mx-auto" >
+                            <div class="outer-container overflow-auto" id="container" style="height: 600px; margin-top: 1px;">
+                                <!-- 초기 환영 메시지는 이 부분에 직접 추가 -->
+                                <div class="d-flex flex-row mt-3">
+                                    <div class="card bg-success text-white w-100">
+                                        <div class="card-body">
+                                            <img src="{{url_for('static', filename='img/ai.png')}}" height="32">
+                                            <span> 안녕하세요. 챗봇 올림입니다!^^ 부동산에 관해서 궁금한 사항이 있으시면 질문해주세요.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+ 
+
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-md-12 mx-auto" >
+                <div class="input-group mb-3" style="height: 50px;">
+                    <input type="text" class="form-control custom-input" name="userInput" id="userInput" onkeyup="if(window.event.keyCode==13) {send()}"
+                        onfocus="if(this.value=='문의할 내용을 적어주세요') { this.value=''; this.style.opacity = 1; }"
+                        onblur="if(this.value=='') { this.value='문의할 내용을 적어주세요'; this.style.opacity = 0.7; }"
+                        placeholder="문의할 내용을 적어주세요">
+                    <button class="btn btn-success" type="submit" onclick="send()">전송</button>
+                </div>
+            </div>   
+        </div>
+
+    
+    <script>
+        
+       
+        
+        
+        
+        function clearDefaultText() {
+            var userInput = document.getElementById("userInput");
+            if (userInput.value == "문의할 내용을 적어주세요.") {
+                userInput.value = "";
+            }
+        }
+
+        function restoreDefaultText() {
+            var userInput = document.getElementById("userInput");
+            if (userInput.value === "") {
+                userInput.value = "문의할 내용을 적어주세요.";
+            }
+        }
+
+        function clearInputField() {
+            var userInput = document.getElementById("userInput");
+            if (userInput.value == "문의할 내용을 적어주세요") {
+                userInput.value = "";
+                userInput.style.opacity = 1;
+            }
+        }
+        
+        function initializeInputField() {
+            var userInput = document.getElementById("userInput");
+            userInput.value = "문의할 내용을 적어주세요";
+            userInput.style.opacity = 0.7;
+        }
+
+        // 페이지 로드 시 실행
+        window.onload = initializeInputField;
+        
+    </script>
+{% endblock %}
